@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript" src="//rawgithub.com/algolia/algoliasearch-client-js/master/dist/algoliasearch.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.js"></script>
+
+    <div id="resultsContaier">
+
+    </div>
+    <script type="text/javascript">
+        var client = new AlgoliaSearch("3Q92VD0BCR", "6d4bee3fdf81d8f259894a63e9d82b28"); // public credentials
+        var index = client.initIndex('qa');
+        var container = $("#resultsContaier");
+
+        function searchCallback(success, content) {
+            if (success) {
+                for (var i = 0; i < content.hits.length; ++i) {
+                    var text = content.hits[i].name;
+                    container.append("<div>" + text + "</div>");
+                }
+            }
+        }
+
+        index.search("",
+            searchCallback,
+            {
+                hitsPerPage: 400,
+                tagFilters: 'user'
+            });
+
+
+    </script>
+
+</body>
+</html>
