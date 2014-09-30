@@ -117,7 +117,7 @@
 
             // Compute the distinct nodes from the links.
             links.forEach(function (link) {
-                link.target = nodes[link.target] || (nodes[link.target] = { name: link.target });
+                link.target = nodes[link.target] || (nodes[link.target] = { name: link.target.substring(0, 8) });
                 link.source = nodes[link.source] || (nodes[link.source] = { name: link.name });
                 //override name for the case when node was added as target
                 link.source.name = link.name;
