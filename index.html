@@ -14,11 +14,11 @@
             fill: green;
         }
 
-        .link.licensing {
+        .link.active {
             stroke: green;
         }
 
-        .link.resolved {
+        .link.pending {
             stroke-dasharray: 0,2 1;
         }
 
@@ -79,12 +79,12 @@
                     var tag = hit._tags[j];
                     if (tag.indexOf('connection_') == 0) {
                         var target = tag.substring(10);
-                        var item = { source: source, target: target, type: "licensing", name: name };
+                        var item = { source: source, target: target, type: "active", name: name };
                         result.push(item);
                     } else {
                         if (tag.indexOf('pending_') == 0) {
                             var target2 = tag.substring(7);
-                            var item2 = { source: source, target: target2, type: "resolved",  name: name};
+                            var item2 = { source: source, target: target2, type: "pending",  name: name};
                             result.push(item2);
                         }
                     }
@@ -135,7 +135,7 @@
         index.search("",
             searchCallback,
             {
-                hitsPerPage: 100,
+                hitsPerPage: 10,
                 tagFilters: 'user'
             });
 
