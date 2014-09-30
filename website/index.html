@@ -77,52 +77,23 @@
                 var name = hit.name;
                 for (var j = 0; j < hit._tags.length; ++j) {
                     var tag = hit._tags[j];
+                    var target;
+                    var item;
                     if (tag.indexOf('connection_') == 0) {
-                        var target = tag.substring(10);
-                        var item = { source: source, target: target, type: "active", name: name };
+                        target = tag.substring(11);
+                        item = { source: source, target: target, type: "active", name: name };
                         result.push(item);
                     } else {
                         if (tag.indexOf('pending_') == 0) {
-                            var target2 = tag.substring(7);
-                            var item2 = { source: source, target: target2, type: "pending",  name: name};
-                            result.push(item2);
+                            target = tag.substring(8);
+                            item = { source: source, target: target, type: "pending",  name: name};
+                            result.push(item);
                         }
                     }
                 }
             }
 
             return result;
-
-            //return [
-            //  { source: "Microsoft", target: "Amazon", type: "licensing" },
-            //  { source: "Microsoft", target: "HTC", type: "licensing" },
-            //  { source: "Samsung", target: "Apple", type: "suit" },
-            //  { source: "Motorola", target: "Apple", type: "suit" },
-            //  { source: "Nokia", target: "Apple", type: "resolved" },
-            //  { source: "HTC", target: "Apple", type: "suit" },
-            //  { source: "Kodak", target: "Apple", type: "suit" },
-            //  { source: "Microsoft", target: "Barnes & Noble", type: "suit" },
-            //  { source: "Microsoft", target: "Foxconn", type: "suit" },
-            //  { source: "Oracle", target: "Google", type: "suit" },
-            //  { source: "Apple", target: "HTC", type: "suit" },
-            //  { source: "Microsoft", target: "Inventec", type: "suit" },
-            //  { source: "Samsung", target: "Kodak", type: "resolved" },
-            //  { source: "LG", target: "Kodak", type: "resolved" },
-            //  { source: "RIM", target: "Kodak", type: "suit" },
-            //  { source: "Sony", target: "LG", type: "suit" },
-            //  { source: "Kodak", target: "LG", type: "resolved" },
-            //  { source: "Apple", target: "Nokia", type: "resolved" },
-            //  { source: "Qualcomm", target: "Nokia", type: "resolved" },
-            //  { source: "Apple", target: "Motorola", type: "suit" },
-            //  { source: "Microsoft", target: "Motorola", type: "suit" },
-            //  { source: "Motorola", target: "Microsoft", type: "suit" },
-            //  { source: "Huawei", target: "ZTE", type: "suit" },
-            //  { source: "Ericsson", target: "ZTE", type: "suit" },
-            //  { source: "Kodak", target: "Samsung", type: "resolved" },
-            //  { source: "Apple", target: "Samsung", type: "suit" },
-            //  { source: "Kodak", target: "RIM", type: "suit" },
-            //  { source: "Nokia", target: "Qualcomm", type: "suit" }
-            //];
 
             //sample data
             //return [
@@ -135,54 +106,25 @@
         index.search("",
             searchCallback,
             {
-                hitsPerPage: 10,
+                hitsPerPage: 20,
                 tagFilters: 'user'
             });
 
 
         function renderData(links) {
-            //// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
-            //var links = [
-            //  { source: "Microsoft", target: "Amazon", type: "licensing" },
-            //  { source: "Microsoft", target: "HTC", type: "licensing" },
-            //  { source: "Samsung", target: "Apple", type: "suit" },
-            //  { source: "Motorola", target: "Apple", type: "suit" },
-            //  { source: "Nokia", target: "Apple", type: "resolved" },
-            //  { source: "HTC", target: "Apple", type: "suit" },
-            //  { source: "Kodak", target: "Apple", type: "suit" },
-            //  { source: "Microsoft", target: "Barnes & Noble", type: "suit" },
-            //  { source: "Microsoft", target: "Foxconn", type: "suit" },
-            //  { source: "Oracle", target: "Google", type: "suit" },
-            //  { source: "Apple", target: "HTC", type: "suit" },
-            //  { source: "Microsoft", target: "Inventec", type: "suit" },
-            //  { source: "Samsung", target: "Kodak", type: "resolved" },
-            //  { source: "LG", target: "Kodak", type: "resolved" },
-            //  { source: "RIM", target: "Kodak", type: "suit" },
-            //  { source: "Sony", target: "LG", type: "suit" },
-            //  { source: "Kodak", target: "LG", type: "resolved" },
-            //  { source: "Apple", target: "Nokia", type: "resolved" },
-            //  { source: "Qualcomm", target: "Nokia", type: "resolved" },
-            //  { source: "Apple", target: "Motorola", type: "suit" },
-            //  { source: "Microsoft", target: "Motorola", type: "suit" },
-            //  { source: "Motorola", target: "Microsoft", type: "suit" },
-            //  { source: "Huawei", target: "ZTE", type: "suit" },
-            //  { source: "Ericsson", target: "ZTE", type: "suit" },
-            //  { source: "Kodak", target: "Samsung", type: "resolved" },
-            //  { source: "Apple", target: "Samsung", type: "suit" },
-            //  { source: "Kodak", target: "RIM", type: "suit" },
-            //  { source: "Nokia", target: "Qualcomm", type: "suit" }
-            //];
 
             var nodes = {};
 
             // Compute the distinct nodes from the links.
-            links.forEach(function(link) {
+            links.forEach(function (link) {
+                link.target = nodes[link.target] || (nodes[link.target] = { name: link.target });
                 link.source = nodes[link.source] || (nodes[link.source] = { name: link.name });
-                link.target = nodes[link.target] || (nodes[link.target] = { name: link.name });
+                //override name for the case when node was added as target
+                link.source.name = link.name;
             });
 
-            var width = 1560,
-                height = 1500;
+            var width = 1000,
+                height = 1000;
 
             var force = d3.layout.force()
                 .nodes(d3.values(nodes))
