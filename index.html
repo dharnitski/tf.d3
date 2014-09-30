@@ -74,16 +74,17 @@
             for (var i = 0; i < content.hits.length; ++i) {
                 var hit = content.hits[i];
                 var source = hit.objectID;
+                var name = hit.name;
                 for (var j = 0; j < hit._tags.length; ++j) {
                     var tag = hit._tags[j];
                     if (tag.indexOf('connection_') == 0) {
                         var target = tag.substring(10);
-                        var item = { source: source, target: target, type: "licensing" };
+                        var item = { source: source, target: target, type: "licensing", name: name };
                         result.push(item);
                     } else {
                         if (tag.indexOf('pending_') == 0) {
                             var target2 = tag.substring(7);
-                            var item2 = { source: source, target: target2, type: "suit" };
+                            var item2 = { source: source, target: target2, type: "suit",  name: name};
                             result.push(item2);
                         }
                     }
@@ -176,8 +177,8 @@
 
             // Compute the distinct nodes from the links.
             links.forEach(function(link) {
-                link.source = nodes[link.source] || (nodes[link.source] = { name: link.source });
-                link.target = nodes[link.target] || (nodes[link.target] = { name: link.target });
+                link.source = nodes[link.source] || (nodes[link.source] = { name: link.name });
+                link.target = nodes[link.target] || (nodes[link.target] = { name: link.name });
             });
 
             var width = 1560,
